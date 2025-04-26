@@ -18,16 +18,38 @@ google_search_tool = Tool(
 
 response = client.models.generate_content(
     model=model_id,
-    contents="When is the next total solar eclipse in the United States?",
+    # contents="When is the next total solar eclipse in the United States?",
+    contents = """I got two task for you. One is what's weather today in Beijing, the second is Help to desing a simple travel plan in the upcoming vacation on May 1st. """,
     config=GenerateContentConfig(
         tools=[google_search_tool],
         response_modalities=["TEXT"],
     )
 )
 
+print("The final response is: \n -------------------------")
+print(response.text)
 
-for each in response.candidates[0].content.parts:
-    print(each.text)
+candidate_idx=0
+part_idx=0
+grounding_support_idx=0
+for candidate in response.candidates:
+    for part in candidate.content.parts:
+        print('text from part {} in candidate {} is: \n -------------------------'.format(part_idx,candidate_idx))
+        print(part.text)
+        print('\n')
+        part_idx += 1
+
+    for grounding_support in candidate.grounding_metadata.grounding_supports:
+        print ('text from ground_support {} in candidate {} is: \n -------------------------'.format(grounding_support_idx,candidate_idx))
+        print(grounding_support.segment.text)
+        print('part index is {}'.format(grounding_support.segment.part_index))
+        print('start index is {}'.format(grounding_support.segment.start_index))
+        print('end index is {}'.format(grounding_support.segment.end_index))
+        grounding_support_idx += 1
+
+candidate_idx += 1
+# for each in response.candidates[0].content.parts:
+#     print(each.text)
 # Example response:
 # The next total solar eclipse visible in the contiguous United States will be on ...
 
