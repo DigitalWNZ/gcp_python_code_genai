@@ -25,3 +25,6 @@ curl -X POST \
 -H "Content-Type: text/xml" \
 https://${LOCATION}-aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/${LOCATION}/endpoints/openapi/chat/completions \
 --data-binary "@tool-with-response.json"
+
+
+# The data file locate on Customer_Manus directory. 
